@@ -42,7 +42,7 @@
             delete document[callbackName];
         };
 
-        options.callback = callbackName;
+        options.callback = 'document.' + callbackName;
 
         script.src = vkQueryBuilder(method, options)
         document.getElementsByTagName('head')[0].appendChild(script);
