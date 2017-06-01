@@ -9,7 +9,7 @@
 
 <script language="javascript">
 
-    const TOKEN = 'cce4bc87ad9b7d36127a9884cb4bf131641ff41b85aa42967602761d8e0c247f2064032b68aa2d0abf904';
+    const TOKEN = '339517a7c1ac087d5dc9f031eedeedb76a8640ba6e28dae2e438fb48f62dab355d4d7694b2244d557e667';
 //    VK.init({
 //        apiId: 6054906
 //    });
@@ -91,15 +91,20 @@
 
         var wrapper = document.createElement('template');
         wrapper.innerHTML = template;
-        return wrapper.content.childNodes;
+        return wrapper.content.firstChild;
     }
 
     function getFriends() {
         var fields = ['uid', 'first_name', 'last_name', 'nickname', 'photo', 'photo_medium', 'photo_big', 'has_mobile', 'rate', 'contacts', 'education'];
         friendList = document.getElementById('friends_list');
         getJsonpData('friends.get', {access_token: TOKEN, count: 100, fields: fields.join(',')}, function (data) {
-            if(Array.isArray(data)) {
-                data.forEach(function (person) {
+            if(Array.isArray(data.response)) {
+                data.response.forEach(function (person) {
+                    var options = {
+                        fullname: person.first_name + ' ' + person.last_name,
+                        photo: person.photo_medium,
+                        study: person.faculty_name,
+                    };
                     friendList.appendChild(renderElement(FRIEND_TEMPLATE, person));
                 })
             }
