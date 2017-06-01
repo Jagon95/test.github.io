@@ -42,9 +42,19 @@
 
     xhr = new XMLHttpRequest();
     xhr.open('GET', vkQueryBuilder('friends.get', {access_token: TOKEN, count: 5}));
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState != 4) return;
+
+        if (xhr.status != 200) {
+            alert(xhr.status + ': ' + xhr.statusText);
+        } else {
+            alert(xhr.responseText);
+        }
+
+    }
 
 
-    //если нет куки
+//если нет куки
     //кнопка авторизации
     //иначе авторизация
 
