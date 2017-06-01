@@ -23,31 +23,88 @@
 //    }
 //    }
 
+    const FRIEND_TEMPLATE = `<div class="friends_user_row clear_fix">
+        <div class="friends_photo_wrap ui_zoom_wrap" onmouseover="uiPhotoZoom.over(this, 107962785)">
+            <a class="ui_zoom_outer ui_zoom_added" href="/albums107962785" aria-label="Увеличить"><div class="ui_zoom_inner">
+                <div class="ui_zoom"><div class="ui_zoom_icon"></div></div></div>
+            </a>
+            <a class="friends_photo _online online mobile" href="/dora_pi_na_3" aria-label="Даша Крюкова онлайн с телефона">
+                <img class="friends_photo_img" src="{{photo}}" data-alt="{{fullname}}">
+            </a>
+        </div>
+        <div class="friends_user_info">
+            <div class="friends_field friends_field_title"><a href="/dora_pi_na_3">{{fullname}}</a></div>
+            <div class="friends_field">{{study}}</div>
+        </div>
+    </div>`;
+
 
     function vkQueryBuilder(method, fields) {
-        query = 'https://api.vk.com/method/' + method + '?';
+        if(!method) throw new Error('Empty method');
+        var query = 'https://api.vk.com/method/' + method + '?';
+        var params = [];
         for(key in fields) {
-            query += key + '=' + fields[key] + '&';
+            params.push(key + '=' + fields[key]);
         }
-        return query;
+        return query + params.join('&');
     }
 
     function getJsonpData(method, options, callback) {
         var script = document.createElement('script');
-        var callbackName = 'jsonpCallback' + Date.now();
 
-        document[callbackName] = function(data) {
-            callback(data);
-            script.remove();
-            delete document[callbackName];
-        };
+        if(callback) {
+            var callbackName = 'jsonpCallback' + Date.now();
+            document[callbackName] = function (data) {
+                callback(data);
+                script.remove();
+                delete document[callbackName];
+            };
 
-        options.callback = 'document.' + callbackName;
+            options.callback = 'document.' + callbackName;
+        }
 
-        script.src = vkQueryBuilder(method, options)
+        script.src = vkQueryBuilder(method, options);
         document.getElementsByTagName('head')[0].appendChild(script);
     }
 
+    
+    function renderElement(template, args) {
+        var $ = template.match(/{{(.*?)}}/g);
+
+        if (Array.isArray($)) {
+            //мы нашли переменные в шаблоне. Необходимо их все распарсить.
+            $.forEach(function (item) {
+                //item содержит найденую строку {{var.VarName}}
+                //по этому мы должны распарсить ету строку дабы получить только VarName
+                item = item.replace("{{", "");
+                item = item.replace("}}", "");
+                //у нас есть имя переменной. Пора проверить передали ли мы такую
+                //и обработать ошибки
+                if (args[item] === undefined){
+                    console.warn("Переменная "+item+" не найдена");
+                    template = template.replace("{{" + item + "}}", "null");
+                } else {
+                    template = template.replace("{{" + item + "}}", args[item]);
+                }
+            });
+        }
+
+        var wrapper = document.createElement('template');
+        wrapper.innerHTML = template;
+        return wrapper.content.childNodes;
+    }
+
+    function getFriends() {
+        var fields = ['uid', 'first_name', 'last_name', 'nickname', 'photo', 'photo_medium', 'photo_big', 'has_mobile', 'rate', 'contacts', 'education'];
+        friendList = document.getElementById('friends_list');
+        getJsonpData('friends.get', {access_token: TOKEN, count: 100, fields: fields.join(',')}, function (data) {
+            if(Array.isArray(data)) {
+                data.forEach(function (person) {
+                    friendList.appendChild(renderElement(FRIEND_TEMPLATE, person));
+                })
+            }
+        });
+    }
 
     getJsonpData('friends.get', {access_token: TOKEN, count: 5}, function (data) {
         console.log(data);
@@ -95,7 +152,24 @@
 
 </script>
 
+<button onclick="getFriends()">Показать друзей</button>
+
+<div id="friends_list">
+    <div class="friends_user_row clear_fix">
+        <div class="friends_photo_wrap ui_zoom_wrap" onmouseover="uiPhotoZoom.over(this, 107962785)">
+            <a class="ui_zoom_outer ui_zoom_added" href="/albums107962785" aria-label="Увеличить"><div class="ui_zoom_inner">
+                <div class="ui_zoom"><div class="ui_zoom_icon"></div></div></div>
+            </a>
+            <a class="friends_photo _online online mobile" href="/dora_pi_na_3" aria-label="Даша Крюкова онлайн с телефона">
+                <img class="friends_photo_img" src="https://pp.userapi.com/c604830/v604830785/3f3a1/Nj5NLfy1IVM.jpg" data-alt="Даша Крюкова">
+            </a>
+        </div>
+        <div class="friends_user_info">
+            <div class="friends_field friends_field_title"><a href="/dora_pi_na_3">Даша Крюкова</a></div>
+            <div class="friends_field">Университет ИТМО</div>
+        </div>
+    </div>
+</div>
+
 </body>
-
-
 </html>
