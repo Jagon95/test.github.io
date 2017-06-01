@@ -34,13 +34,15 @@
 
     function getJsonpData(method, options, callback) {
         var script = document.createElement('script');
+        var callbackName = 'jsonpCallback' + Date.now();
 
-        function callbackWrapper(data) {
+        document[callbackName] = function(data) {
             callback(data);
             script.remove();
-        }
+            delete document[callbackName];
+        };
 
-        options.callback = 'callbackWrapper';
+        options.callback = callbackName;
 
         script.src = vkQueryBuilder(method, options)
         document.getElementsByTagName('head')[0].appendChild(script);
