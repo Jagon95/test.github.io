@@ -3,11 +3,13 @@
 
 </head>
 <body>
-<script src="//vk.com/js/api/openapi.js" type="text/javascript"></script>
+<!--<script src="//vk.com/js/api/openapi.js" type="text/javascript"></script>-->
 
 <!--<div id="login_button" onclick="VK.Auth.login(authInfo, 3);"></div>-->
 
 <script language="javascript">
+
+    const TOKEN = 'cce4bc87ad9b7d36127a9884cb4bf131641ff41b85aa42967602761d8e0c247f2064032b68aa2d0abf904';
 //    VK.init({
 //        apiId: 6054906
 //    });
@@ -30,17 +32,35 @@
         return query;
     }
 
+    function getJsonpData(method, options, callback) {
+        var script = document.createElement('script');
+
+        function callbackWrapper(data) {
+            callback(data);
+            script.remove();
+        }
+
+        options.callback = 'callbackWrapper';
+
+        script.src = vkQueryBuilder(method, options)
+        document.getElementsByTagName('head')[0].appendChild(script);
+    }
+
+
+    getJsonpData('friends.get', {access_token: TOKEN, count: 5}, function (data) {
+        console.log(data);
+    });
 
     rights = ['notify', 'friends'];
 //https://oauth.vk.com/authorize?client_id=6054906&scope=rights.join(',')&redirect_uri=https://jagon95.github.io&display=page&response_type=token
-    const TOKEN = 'cce4bc87ad9b7d36127a9884cb4bf131641ff41b85aa42967602761d8e0c247f2064032b68aa2d0abf904';
+//https://oauth.vk.com/authorize?client_id=6054906&scope=friends&redirect_uri=http://oauth.vk.com/blank.html&display=page&response_type=token
 
 //cce4bc87ad9b7d36127a9884cb4bf131641ff41b85aa42967602761d8e0c247f2064032b68aa2d0abf904
 //    VK.Auth.getLoginStatus(authInfo);
 //    VK.UI.button('login_button');
 //    https://api.vk.com/method/METHOD_NAME?PARAMETERS&access_token=ACCESS_TOKEN
 
-    xhr = new XMLHttpRequest();
+/*    xhr = new XMLHttpRequest();
     xhr.open('GET', vkQueryBuilder('friends.get', {access_token: TOKEN, count: 5}));
     xhr.onreadystatechange = function() {
         if (xhr.readyState != 4) return;
@@ -52,7 +72,10 @@
         }
 
     }
-    xhr.send();
+    xhr.send();*/
+
+
+
 
 //если нет куки
     //кнопка авторизации
