@@ -1,0 +1,136 @@
+body {
+    background: #edeef0;
+    color: #000;
+    margin: 0;
+    padding: 0;
+    direction: ltr;
+    font-size: 13px;
+    font-family: -apple-system, BlinkMacSystemFont, Roboto, Open Sans, Helvetica Neue, sans-serif;
+    line-height: 1.154;
+    font-weight: 400;
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto
+}
+
+.wide_column_wrap {
+    margin: auto;
+    width:50%;
+    min-width: 720px;
+    margin-bottom: 30px;
+    display: none;
+}
+
+.wide_column {
+    position: relative;
+    width: 100%
+}
+
+.page_block {
+    position: relative;
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0 1px 0 0 #d7d8db, 0 0 0 1px #e3e4e8;
+    margin: 15px 0 0;
+}
+
+.page_block:empty {
+    display: none
+}
+
+.friends_list {
+    padding: 0 20px
+}
+
+.friends_list_bl {
+    border-top: 1px solid #e7e8ec
+}
+
+.friends_list_bl:first-child {
+    border-top: none
+}
+
+.friends_user_row {
+    border-top: 1px solid #e7e8ec;
+    padding: 12px 0;
+    clear: both;
+    position: relative
+}
+
+.friends_user_row:first-child {
+    border-top: none
+}
+
+.clear_fix:after {
+    content: '.';
+    display: block;
+    height: 0;
+    font-size: 0;
+    line-height: 0;
+    clear: both;
+    visibility: hidden
+}
+
+* html .clear_fix {
+    height: 1%
+}
+
+.clear_fix {
+    display: block
+}
+
+.friends_photo_wrap {
+    float: left;
+    margin: 0 15px 0 0;
+    position: relative;
+    width: 80px;
+    height: 80px;
+    overflow: hidden
+}
+
+.friends_photo {
+    width: 80px;
+    height: 80px;
+    display: block;
+    overflow: hidden
+}
+
+.friends_user_info {
+    padding: 5px 10px 0 0;
+    overflow: hidden
+}
+
+.friends_field {
+    margin-bottom: 9px;
+    color: #656565
+}
+
+.friends_field_title {
+    font-weight: 700;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 13px;
+    color: #42648b
+}
+
+a {
+     color: #2a5885;
+     text-decoration: none;
+     cursor: pointer
+ }
+
+a b, b a {
+    color: #42648b
+}
+
+img {
+    border: 0;
+    color: transparent
+}
+
+.friends_photo_img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    -moz-force-broken-image-icon: 0;
+    background-color: #fafbfc
+}

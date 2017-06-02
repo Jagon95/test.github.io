@@ -1,42 +1,34 @@
 <html>
 <head>
 
+    <style>
+
+    </style>
+    <!--<link type="text/css" rel="stylesheet" href="friends.css">-->
+    <!--<link type="text/css" rel="stylesheet" href="common.css">-->
+    <link type="text/css" rel="stylesheet" href="style.css">
 </head>
 <body>
-<!--<script src="//vk.com/js/api/openapi.js" type="text/javascript"></script>-->
-
-<!--<div id="login_button" onclick="VK.Auth.login(authInfo, 3);"></div>-->
-
 <script language="javascript">
 
     const TOKEN = '339517a7c1ac087d5dc9f031eedeedb76a8640ba6e28dae2e438fb48f62dab355d4d7694b2244d557e667';
-//    VK.init({
-//        apiId: 6054906
-//    });
-//
-//
-//    function authInfo(response) {
-//    if (response.session) {
-//        alert('user: '+response.session.mid);
-//    } else {
-//        alert('not auth');
-//    }
-//    }
 
-    const FRIEND_TEMPLATE = `<div class="friends_user_row clear_fix">
-        <div class="friends_photo_wrap ui_zoom_wrap" onmouseover="uiPhotoZoom.over(this, 107962785)">
-            <a class="ui_zoom_outer ui_zoom_added" href="/albums107962785" aria-label="Увеличить"><div class="ui_zoom_inner">
-                <div class="ui_zoom"><div class="ui_zoom_icon"></div></div></div>
-            </a>
-            <a class="friends_photo _online online mobile" href="/dora_pi_na_3" aria-label="Даша Крюкова онлайн с телефона">
-                <img class="friends_photo_img" src="{{photo}}" data-alt="{{fullname}}">
-            </a>
-        </div>
-        <div class="friends_user_info">
-            <div class="friends_field friends_field_title"><a href="/dora_pi_na_3">{{fullname}}</a></div>
-            <div class="friends_field">{{study}}</div>
-        </div>
-    </div>`;
+    const FRIEND_TEMPLATE = `<div class="friends_user_row clear_fix" id="friends_user_row{{id}}">
+                            <div id="res{{id}}"></div>
+                            <div class="friends_photo_wrap">
+                                <a class="friends_photo _online" href="https://vk.com/id{{id}}"><img class="friends_photo_img"
+                                                                                         alt="{{fullname}}"
+                                                                                         src="{{photo}}"></a>
+                            </div>
+                            <div class="friends_user_info">
+                                <div class="friends_field friends_field_title"><a href="https://vk.com/id{{id}}">{{fullname}}</a>
+                                </div>
+                                <div class="friends_field">{{study}}</div>
+
+                                <a href="https://vk.com/write{{id}}" class="friends_field_act"
+                                   onclick="return showWriteMessageBox(event, {{id}})">Написать сообщение</a>
+                            </div>
+                        </div>`;
 
 
     function vkQueryBuilder(method, fields) {
@@ -72,14 +64,9 @@
         var $ = template.match(/{{(.*?)}}/g);
 
         if (Array.isArray($)) {
-            //мы нашли переменные в шаблоне. Необходимо их все распарсить.
             $.forEach(function (item) {
-                //item содержит найденую строку {{var.VarName}}
-                //по этому мы должны распарсить ету строку дабы получить только VarName
                 item = item.replace("{{", "");
                 item = item.replace("}}", "");
-                //у нас есть имя переменной. Пора проверить передали ли мы такую
-                //и обработать ошибки
                 if (args[item] === undefined){
                     console.warn("Переменная "+item+" не найдена");
                     template = template.replace("{{" + item + "}}", "null");
@@ -96,85 +83,81 @@
 
     function getFriends() {
         var fields = ['uid', 'first_name', 'last_name', 'nickname', 'photo', 'photo_medium', 'photo_big', 'has_mobile', 'rate', 'contacts', 'education'];
-        friendList = document.getElementById('friends_list');
+        friendList = document.getElementById('friends_container');
         getJsonpData('friends.get', {access_token: TOKEN, count: 100, fields: fields.join(',')}, function (data) {
             if(Array.isArray(data.response)) {
+                document.getElementById("friend_list_wrapper").style.display = 'block';
+
                 data.response.forEach(function (person) {
                     var options = {
                         fullname: person.first_name + ' ' + person.last_name,
                         photo: person.photo_medium,
                         study: person.faculty_name,
+                        id: person.uid
                     };
-                    friendList.appendChild(renderElement(FRIEND_TEMPLATE, person));
+                    friendList.appendChild(renderElement(FRIEND_TEMPLATE, options));
                 })
             }
         });
     }
 
-    getJsonpData('friends.get', {access_token: TOKEN, count: 5}, function (data) {
-        console.log(data);
-    });
+    rights = ['friends'];
+    //https://oauth.vk.com/authorize?client_id=6054906&scope=rights.join(',')&redirect_uri=https://jagon95.github.io&display=page&response_type=token
+    //https://oauth.vk.com/authorize?client_id=6054906&scope=friends&redirect_uri=http://oauth.vk.com/blank.html&display=page&response_type=token
 
-    rights = ['notify', 'friends'];
-//https://oauth.vk.com/authorize?client_id=6054906&scope=rights.join(',')&redirect_uri=https://jagon95.github.io&display=page&response_type=token
-//https://oauth.vk.com/authorize?client_id=6054906&scope=friends&redirect_uri=http://oauth.vk.com/blank.html&display=page&response_type=token
+    //cce4bc87ad9b7d36127a9884cb4bf131641ff41b85aa42967602761d8e0c247f2064032b68aa2d0abf904
+    //    VK.Auth.getLoginStatus(authInfo);
+    //    VK.UI.button('login_button');
+    //    https://api.vk.com/method/METHOD_NAME?PARAMETERS&access_token=ACCESS_TOKEN
 
-//cce4bc87ad9b7d36127a9884cb4bf131641ff41b85aa42967602761d8e0c247f2064032b68aa2d0abf904
-//    VK.Auth.getLoginStatus(authInfo);
-//    VK.UI.button('login_button');
-//    https://api.vk.com/method/METHOD_NAME?PARAMETERS&access_token=ACCESS_TOKEN
+    function getToken() {
+        xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://oauth.vk.com/authorize?client_id=6054906&scope=friends&redirect_uri=http://oauth.vk.com/blank.html&display=page&response_type=token');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState != 4) return;
 
-/*    xhr = new XMLHttpRequest();
-    xhr.open('GET', vkQueryBuilder('friends.get', {access_token: TOKEN, count: 5}));
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState != 4) return;
+            if (xhr.status != 200) {
+                alert(xhr.status + ': ' + xhr.statusText);
+            } else {
+                alert(xhr.responseText);
+            }
 
-        if (xhr.status != 200) {
-            alert(xhr.status + ': ' + xhr.statusText);
-        } else {
-            alert(xhr.responseText);
         }
-
+        xhr.send();
     }
-    xhr.send();*/
 
 
 
 
-//если нет куки
-    //кнопка авторизации
-    //иначе авторизация
+
+    //если нет куки
+        //кнопка авторизации
+        //иначе авторизация
 
 
 
-    //если хорошо - рисуем блок с именем и списком друзей
-    //  кнопка релоад - для того, чтобы показать других друзей
-    //иначе выводим сообщение о том, что все плохо
-    //  и предлагаем залогиниться еще
+        //если хорошо - рисуем блок с именем и списком друзей
+        //  кнопка релоад - для того, чтобы показать других друзей
+        //иначе выводим сообщение о том, что все плохо
+        //  и предлагаем залогиниться еще
 
 
 
 
-</script>
+    </script>
 
-<button onclick="getFriends()">Показать друзей</button>
-
-<div id="friends_list">
-    <div class="friends_user_row clear_fix">
-        <div class="friends_photo_wrap ui_zoom_wrap" onmouseover="uiPhotoZoom.over(this, 107962785)">
-            <a class="ui_zoom_outer ui_zoom_added" href="/albums107962785" aria-label="Увеличить"><div class="ui_zoom_inner">
-                <div class="ui_zoom"><div class="ui_zoom_icon"></div></div></div>
-            </a>
-            <a class="friends_photo _online online mobile" href="/dora_pi_na_3" aria-label="Даша Крюкова онлайн с телефона">
-                <img class="friends_photo_img" src="https://pp.userapi.com/c604830/v604830785/3f3a1/Nj5NLfy1IVM.jpg" data-alt="Даша Крюкова">
-            </a>
-        </div>
-        <div class="friends_user_info">
-            <div class="friends_field friends_field_title"><a href="/dora_pi_na_3">Даша Крюкова</a></div>
-            <div class="friends_field">Университет ИТМО</div>
+    <button onclick="getFriends()">Показать друзей</button>
+    <button onclick="getToken()">Токен</button>
+    <div class="wide_column_wrap" id="friend_list_wrapper">
+        <div class="wide_column" id="wide_column">
+            <div id="friends" class="page_block clear_fix">
+                <div id="friends_list" class="friends_list">
+                    <div class="friends_list_bl" id="friends_container">
+                    </div>
+                </div>
+                <div id="page_end"></div>
+            </div>
         </div>
     </div>
-</div>
-
 </body>
 </html>
