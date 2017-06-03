@@ -3,23 +3,6 @@
  */
 
 
-const FRIEND_TEMPLATE = `<div class="friends_user_row clear_fix" id="friends_user_row{{id}}">
-                            <div id="res{{id}}"></div>
-                            <div class="friends_photo_wrap">
-                                <a class="friends_photo _online" href="https://vk.com/id{{id}}"><img class="friends_photo_img"
-                                                                                         alt="{{fullname}}"
-                                                                                         src="{{photo}}"></a>
-                            </div>
-                            <div class="friends_user_info">
-                                <div class="friends_field friends_field_title"><a href="https://vk.com/id{{id}}">{{fullname}}</a>
-                                </div>
-                                <div class="friends_field">{{study}}</div>
-
-                                <a href="https://vk.com/write{{id}}" class="friends_field_act"
-                                   onclick="return showWriteMessageBox(event, {{id}})">Написать сообщение</a>
-                            </div>
-                        </div>`;
-
 /**
  * Генерирует запрос для VK api с соответствующими параметрами
  *
@@ -39,12 +22,12 @@ function vkQueryBuilder(method, fields) {
 
 
 /**
+ * Запрос данных по JSONP-протоколу
  *
- * @param method
- * @param options
- * @param callback
+ * @param {string} src Адрес, по которому будет выполняться запрос
+ * @param {function} callback Функция, которая будет принимать JSON-данные
  */
-function getJsonpData(method, options, callback) {
+function getJsonpData(src, callback) {
     var script = document.createElement('script');
 
     if(callback) {
@@ -58,11 +41,17 @@ function getJsonpData(method, options, callback) {
         options.callback = 'document.' + callbackName;
     }
 
-    script.src = vkQueryBuilder(method, options);
+    script.src = src;
     document.getElementsByTagName('head')[0].appendChild(script);
 }
 
-
+/**
+ * Создает Node-элемент, сгенерированный из шаблона
+ *
+ * @param {string} template
+ * @param {Object} args
+ * @returns {Node}
+ */
 function renderElement(template, args) {
     var $ = template.match(/{{(.*?)}}/g);
 
@@ -91,7 +80,7 @@ function getRandomInt(max) {
 function get5RandomFriends() {
     var fields = ['uid', 'first_name', 'last_name', 'photo_medium', 'education'];
     friendList = document.getElementById('friends_container');
-    getJsonpData('friends.get', {access_token: token, fields: fields.join(',')}, function (data) {
+    getJsonpData(vkQueryBuilder('friends.get', {access_token: token, fields: fields.join(',')}), function (data) {
         if(Array.isArray(data.response)) {
             document.getElementById("friend_list_wrapper").style.display = 'block';
 
@@ -105,14 +94,20 @@ function get5RandomFriends() {
                 };
 
                 var t = document.getElementById("friend_template");
-                friendList.appendChild(renderElement(t.innerHTML, options));
+                friendList.appendChild(renderElement(t.innerHTML.trim(), options));
             }
         }
     });
 }
 
 
-
+/**
+ * Функция устанавливает куку
+ *
+ * @param {string} cname имя куки
+ * @param {string} cvalue значение куки
+ * @param {string} ctime как долго хранить (в мс)
+ */
 function setCookie(cname, cvalue, ctime) {
     if(ctime > 0) {
         var d = new Date();
@@ -124,8 +119,15 @@ function setCookie(cname, cvalue, ctime) {
         document.cookie = cname + "=" + cvalue + ";" + ";path=/";
 }
 
+
+/**
+ * Функция вернет куку с именем name или null
+ *
+ * @param {string} name
+ * @returns {null|string}
+ */
 function getCookie(name) {
-    var matches = document.cookie.match(new RegExp("(?:^|; )" + "token" + "=([^;]*)"));
+    var matches = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
     return matches ? matches[1] : null;
 }
 

@@ -11,7 +11,6 @@
 <script language="javascript">
 
 //    const TOKEN = '8c323488e2e8637156cb06d877598089d5f9e227c19534f5a7e302507f0e55ed0c30a7db0bcc89d068d7b';
-    var token;
 
 
 
@@ -60,14 +59,25 @@
 
 
 
-    token = window.location.hash.match(/access_token=([0-9a-f]+)/);
+    var token = window.location.hash.match(/access_token=([0-9a-f]+)/);
+    var auth_button = document.getElementById('auth_button');
+    var show_friends_button = document.getElementById('show_friends_button');
+
     if(token) {
+        auth_button.style.display="none";
         token = token[1];
         var expires = window.location.hash.match(/expires_in=([0-9]+)/);
         setCookie('token', token, expires ? expires[1] * 1000 : 0);
+        window.location.hash = '';
     }
     else {
         token = getCookie('token');
+        if(!token) {
+            show_friends_button.style.display="none";
+        } else {
+            auth_button.style.display="none";
+        }
+
     }
 
 
@@ -75,9 +85,9 @@
 
     </script>
 
-    <button onclick="get5RandomFriends()">Показать друзей</button>
+    <button onclick="get5RandomFriends()" class="flat_button" id="show_friends_button">Показать друзей</button>
     <!--<button onclick="getToken()">Токен</button>-->
-<a href="https://oauth.vk.com/authorize?client_id=6054906&scope=friends&redirect_uri=https://jagon95.github.io&display=page&response_type=token">получить токен</a>
+<a class="flat_button" href="https://oauth.vk.com/authorize?client_id=6054906&scope=friends&redirect_uri=https://jagon95.github.io&display=page&response_type=token" id="auth_button">Авторизоваться</a>
     <div class="wide_column_wrap" id="friend_list_wrapper">
         <div class="wide_column" id="wide_column">
             <div id="friends" class="page_block clear_fix">
