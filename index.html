@@ -65,7 +65,7 @@
 
         if (token) {
             auth_button.style.display = "none";
-            token = token[1];
+            window.token = token[1];
             var expires = window.location.hash.match(/expires_in=([0-9]+)/);
             setCookie('token', token, expires ? expires[1] * 1000 : 0);
             window.location.hash = '';
@@ -75,6 +75,7 @@
             if (!token) {
                 show_friends_button.style.display = "none";
             } else {
+                window.token = token;
                 auth_button.style.display = "none";
             }
 

@@ -85,7 +85,7 @@ function get5RandomFriends() {
         friendList.removeChild(friendList.firstChild);
     }
 
-    getJsonpData(vkQueryBuilder('friends.get', {access_token: token, fields: fields.join(',')}), function (data) {
+    getJsonpData(vkQueryBuilder('friends.get', {access_token: window.token, fields: fields.join(',')}), function (data) {
         if(Array.isArray(data.response)) {
             document.getElementById("friend_list_wrapper").style.display = 'block';
 
