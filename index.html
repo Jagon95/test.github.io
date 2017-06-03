@@ -1,107 +1,22 @@
 <html>
 <head>
     <title>Test Vk OAuth 2.0</title>
-    <style>
-
-    </style>
+    <script src="script.js"></script>
     <!--<link type="text/css" rel="stylesheet" href="friends.css">-->
     <!--<link type="text/css" rel="stylesheet" href="common.css">-->
     <link type="text/css" rel="stylesheet" href="style.css">
+    <link type="" rel="stylesheet" href="style.css">
 </head>
 <body>
 <script language="javascript">
 
 //    const TOKEN = '8c323488e2e8637156cb06d877598089d5f9e227c19534f5a7e302507f0e55ed0c30a7db0bcc89d068d7b';
     var token;
-    const FRIEND_TEMPLATE = `<div class="friends_user_row clear_fix" id="friends_user_row{{id}}">
-                            <div id="res{{id}}"></div>
-                            <div class="friends_photo_wrap">
-                                <a class="friends_photo _online" href="https://vk.com/id{{id}}"><img class="friends_photo_img"
-                                                                                         alt="{{fullname}}"
-                                                                                         src="{{photo}}"></a>
-                            </div>
-                            <div class="friends_user_info">
-                                <div class="friends_field friends_field_title"><a href="https://vk.com/id{{id}}">{{fullname}}</a>
-                                </div>
-                                <div class="friends_field">{{study}}</div>
-
-                                <a href="https://vk.com/write{{id}}" class="friends_field_act"
-                                   onclick="return showWriteMessageBox(event, {{id}})">Написать сообщение</a>
-                            </div>
-                        </div>`;
 
 
-    function vkQueryBuilder(method, fields) {
-        if(!method) throw new Error('Empty method');
-        var query = 'https://api.vk.com/method/' + method + '?';
-        var params = [];
-        for(key in fields) {
-            params.push(key + '=' + fields[key]);
-        }
-        return query + params.join('&');
-    }
 
-    function getJsonpData(method, options, callback) {
-        var script = document.createElement('script');
 
-        if(callback) {
-            var callbackName = 'jsonpCallback' + Date.now();
-            document[callbackName] = function (data) {
-                callback(data);
-                script.remove();
-                delete document[callbackName];
-            };
 
-            options.callback = 'document.' + callbackName;
-        }
-
-        script.src = vkQueryBuilder(method, options);
-        document.getElementsByTagName('head')[0].appendChild(script);
-    }
-
-    
-    function renderElement(template, args) {
-        var $ = template.match(/{{(.*?)}}/g);
-
-        if (Array.isArray($)) {
-            $.forEach(function (item) {
-                item = item.replace("{{", "");
-                item = item.replace("}}", "");
-                if (args[item] === undefined){
-                    console.warn("Переменная "+item+" не найдена");
-                    template = template.replace("{{" + item + "}}", "null");
-                } else {
-                    template = template.replace("{{" + item + "}}", args[item]);
-                }
-            });
-        }
-
-        var wrapper = document.createElement('template');
-        wrapper.innerHTML = template;
-        return wrapper.content.firstChild;
-    }
-
-    function getFriends() {
-        var fields = ['uid', 'first_name', 'last_name', 'nickname', 'photo', 'photo_medium', 'photo_big', 'has_mobile', 'rate', 'contacts', 'education'];
-        friendList = document.getElementById('friends_container');
-        getJsonpData('friends.get', {access_token: token, count: 100, fields: fields.join(',')}, function (data) {
-            if(Array.isArray(data.response)) {
-                document.getElementById("friend_list_wrapper").style.display = 'block';
-
-                data.response.forEach(function (person) {
-                    var options = {
-                        fullname: person.first_name + ' ' + person.last_name,
-                        photo: person.photo_medium,
-                        study: person.faculty_name,
-                        id: person.uid
-                    };
-                    friendList.appendChild(renderElement(FRIEND_TEMPLATE, options));
-                })
-            }
-        });
-    }
-
-    rights = ['friends'];
     //https://oauth.vk.com/authorize?client_id=6054906&scope=rights.join(',')&redirect_uri=https://jagon95.github.io&display=page&response_type=token
     //https://oauth.vk.com/authorize?client_id=6054906&scope=friends&redirect_uri=http://oauth.vk.com/blank.html&display=page&response_type=token
 
@@ -143,22 +58,6 @@
 
 
 
-    function setCookie(cname, cvalue, ctime) {
-        if(ctime > 0) {
-            var d = new Date();
-            d.setTime(Date.now() + ctime);
-            var expires = "expires=" + d.toUTCString();
-            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-        }
-        else
-            document.cookie = cname + "=" + cvalue + ";" + ";path=/";
-    }
-
-    function getCookie(name) {
-        var matches = document.cookie.match(new RegExp("(?:^|; )" + "token" + "=([^;]*)"));
-        return matches ? matches[1] : null;
-    }
-
 
 
     token = window.location.hash.match(/access_token=([0-9a-f]+)/);
@@ -176,7 +75,7 @@
 
     </script>
 
-    <button onclick="getFriends()">Показать друзей</button>
+    <button onclick="get5RandomFriends()">Показать друзей</button>
     <!--<button onclick="getToken()">Токен</button>-->
 <a href="https://oauth.vk.com/authorize?client_id=6054906&scope=friends&redirect_uri=https://jagon95.github.io&display=page&response_type=token">получить токен</a>
     <div class="wide_column_wrap" id="friend_list_wrapper">
@@ -190,5 +89,25 @@
             </div>
         </div>
     </div>
+
+<template id="friend_template">
+    <div class="friends_user_row clear_fix" id="friends_user_row{{id}}">
+        <div id="res{{id}}"></div>
+        <div class="friends_photo_wrap">
+            <a class="friends_photo _online" href="https://vk.com/id{{id}}"><img class="friends_photo_img"
+                                                                                 alt="{{fullname}}"
+                                                                                 src="{{photo}}"></a>
+        </div>
+        <div class="friends_user_info">
+            <div class="friends_field friends_field_title"><a href="https://vk.com/id{{id}}">{{fullname}}</a>
+            </div>
+            <div class="friends_field">{{study}}</div>
+
+            <a href="https://vk.com/write{{id}}" class="friends_field_act"
+               onclick="return showWriteMessageBox(event, {{id}})">Написать сообщение</a>
+        </div>
+    </div>
+</template>
+
 </body>
 </html>
