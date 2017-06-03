@@ -57,30 +57,30 @@
 
 
 
+    window.onload = function () {
 
+        var token = window.location.hash.match(/access_token=([0-9a-f]+)/);
+        var auth_button = document.getElementById('auth_button');
+        var show_friends_button = document.getElementById('show_friends_button');
 
-    var token = window.location.hash.match(/access_token=([0-9a-f]+)/);
-    var auth_button = document.getElementById('auth_button');
-    var show_friends_button = document.getElementById('show_friends_button');
+        if (token) {
+            auth_button.style.display = "none";
+            token = token[1];
+            var expires = window.location.hash.match(/expires_in=([0-9]+)/);
+            setCookie('token', token, expires ? expires[1] * 1000 : 0);
+            window.location.hash = '';
+        }
+        else {
+            token = getCookie('token');
+            if (!token) {
+                show_friends_button.style.display = "none";
+            } else {
+                auth_button.style.display = "none";
+            }
 
-    if(token) {
-        auth_button.style.display="none";
-        token = token[1];
-        var expires = window.location.hash.match(/expires_in=([0-9]+)/);
-        setCookie('token', token, expires ? expires[1] * 1000 : 0);
-        window.location.hash = '';
-    }
-    else {
-        token = getCookie('token');
-        if(!token) {
-            show_friends_button.style.display="none";
-        } else {
-            auth_button.style.display="none";
         }
 
     }
-
-
 
 
     </script>

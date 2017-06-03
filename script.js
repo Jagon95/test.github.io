@@ -38,7 +38,7 @@ function getJsonpData(src, callback) {
             delete document[callbackName];
         };
 
-        options.callback = 'document.' + callbackName;
+        src += '&callback=document.' + callbackName;
     }
 
     script.src = src;
@@ -80,6 +80,11 @@ function getRandomInt(max) {
 function get5RandomFriends() {
     var fields = ['uid', 'first_name', 'last_name', 'photo_medium', 'education'];
     friendList = document.getElementById('friends_container');
+
+    while (friendList.firstChild) {
+        friendList.removeChild(friendList.firstChild);
+    }
+
     getJsonpData(vkQueryBuilder('friends.get', {access_token: token, fields: fields.join(',')}), function (data) {
         if(Array.isArray(data.response)) {
             document.getElementById("friend_list_wrapper").style.display = 'block';
