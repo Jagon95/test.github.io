@@ -1,6 +1,6 @@
 <html>
 <head>
-
+    <title>Test Vk OAuth 2.0</title>
     <style>
 
     </style>
@@ -11,7 +11,7 @@
 <body>
 <script language="javascript">
 
-    const TOKEN = '339517a7c1ac087d5dc9f031eedeedb76a8640ba6e28dae2e438fb48f62dab355d4d7694b2244d557e667';
+//    const TOKEN = '8c323488e2e8637156cb06d877598089d5f9e227c19534f5a7e302507f0e55ed0c30a7db0bcc89d068d7b';
 
     const FRIEND_TEMPLATE = `<div class="friends_user_row clear_fix" id="friends_user_row{{id}}">
                             <div id="res{{id}}"></div>
@@ -143,11 +143,40 @@
 
 
 
+    function setCookie(cname, cvalue, ctime) {
+        if(ctime > 0) {
+            var d = new Date();
+            d.setTime(Date.now() + ctime);
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+        else
+            document.cookie = cname + "=" + cvalue + ";" + ";path=/";
+    }
+
+function getCookie(name) {
+    var matches = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
+
+
+    var token = window.location.hash.match(/access_token=([0-9a-f]+)/);
+    if(token !== null) {
+        token = token[1];
+        var expires = window.location.hash.match(/expires_in=([0-9]+)/);
+        setCookie('token', token, expires ? expires[1] * 1000 : 0);
+    }
+//    else if ()
+
+
+
 
     </script>
 
     <button onclick="getFriends()">Показать друзей</button>
     <button onclick="getToken()">Токен</button>
+<a href="https://oauth.vk.com/authorize?client_id=6054906&scope=friends&redirect_uri=https://jagon95.github.io&display=page&response_type=token">получить токен</a>
     <div class="wide_column_wrap" id="friend_list_wrapper">
         <div class="wide_column" id="wide_column">
             <div id="friends" class="page_block clear_fix">
