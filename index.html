@@ -8,53 +8,6 @@
 <body>
 <script language="javascript">
 
-//    const TOKEN = '8c323488e2e8637156cb06d877598089d5f9e227c19534f5a7e302507f0e55ed0c30a7db0bcc89d068d7b';
-
-
-
-
-
-    //https://oauth.vk.com/authorize?client_id=6054906&scope=rights.join(',')&redirect_uri=https://jagon95.github.io&display=page&response_type=token
-    //https://oauth.vk.com/authorize?client_id=6054906&scope=friends&redirect_uri=http://oauth.vk.com/blank.html&display=page&response_type=token
-
-    //cce4bc87ad9b7d36127a9884cb4bf131641ff41b85aa42967602761d8e0c247f2064032b68aa2d0abf904
-    //    VK.Auth.getLoginStatus(authInfo);
-    //    VK.UI.button('login_button');
-    //    https://api.vk.com/method/METHOD_NAME?PARAMETERS&access_token=ACCESS_TOKEN
-
-//    function getToken() {
-//        xhr = new XMLHttpRequest();
-//        xhr.open('GET', 'https://oauth.vk.com/authorize?client_id=6054906&scope=friends&redirect_uri=http://oauth.vk.com/blank.html&display=page&response_type=token');
-//        xhr.onreadystatechange = function() {
-//            if (xhr.readyState != 4) return;
-//
-//            if (xhr.status != 200) {
-//                alert(xhr.status + ': ' + xhr.statusText);
-//            } else {
-//                alert(xhr.responseText);
-//            }
-//
-//        }
-//        xhr.send();
-//    }
-
-
-
-
-
-    //если нет куки
-        //кнопка авторизации
-        //иначе авторизация
-
-
-
-        //если хорошо - рисуем блок с именем и списком друзей
-        //  кнопка релоад - для того, чтобы показать других друзей
-        //иначе выводим сообщение о том, что все плохо
-        //  и предлагаем залогиниться еще
-
-
-
     window.onload = function () {
 
         var token = getVarFromHash('token');
@@ -67,16 +20,11 @@
             auth_button.style.display = "none";
             window.token = token;
             window.userId = userId;
-//            var expires = window.location.hash.match(/expires_in=([0-9]+)/);
-//            expires = expires ? expires[1] * 1000 : 0;
-
-//            var userId = window.location.hash.match(/user_id=([0-9]+)/);
-//            userId = userId ? userId[1] : null;
             setCookie('token', window.token, expires);
             setCookie('user_id', userId, expires);
             window.location.hash = '';
 
-            showProfile();
+            showProfile(window.userId, window.token);
         }
         else {
             token = getCookie('token');
@@ -85,37 +33,31 @@
                 auth_button.style.display = "none";
                 window.token = token;
                 window.userId = userId;
-//                auth_button.style.display = "none";
-                showProfile();
+                showProfile(window.userId, window.token);
             }
         }
-
     }
 
 
+</script>
+<a class="flat_button"
+   href="https://oauth.vk.com/authorize?client_id=6054906&scope=friends&redirect_uri=https://jagon95.github.io&display=page&response_type=token"
+   id="auth_button">Авторизоваться</a>
+
+<div class="wide_column_wrap">
+    <div class="wide_column">
+        <div id="profile" class="page_block clear_fix">
+        </div>
 
 
-    </script>
-<!--0c88394559b35bd559ee3dccd1fb337ecdfd6915c264f068b6d6120acd16a5c4872eaacdf12cd8952b7c9-->
-<!--f8043b9644556daa88e5adada2f7684fe7cdd23f56a36de1337086464831a9841648e9425a86774267a7b-->
-    <!--<button onclick="getToken()">Токен</button>-->
-    <!--<a class="flat_button" href="https://oauth.vk.com/authorize?client_id=6060904&scope=11111111111111&redirect_uri=https://jagon95.github.io&display=page&response_type=token" id="auth_button">Авторизоваться</a>-->
-    <a class="flat_button" href="https://oauth.vk.com/authorize?client_id=6054906&scope=friends&redirect_uri=https://jagon95.github.io&display=page&response_type=token" id="auth_button">Авторизоваться</a>
-
-    <div class="wide_column_wrap">
-        <div class="wide_column">
-            <div id="profile" class="page_block clear_fix">
-            </div>
-
-
-            <div id="friends" class="page_block clear_fix">
-                <div id="friends_list" class="friends_list">
-                    <div class="friends_list_bl" id="friends_container">
-                    </div>
+        <div id="friends" class="page_block clear_fix">
+            <div id="friends_list" class="friends_list">
+                <div class="friends_list_bl" id="friends_container">
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 <template id="profile_template">
     <div class="profile_wrapper clear_fix">
@@ -128,13 +70,7 @@
             <h2 class="page_name">{{fullname}}</h2>
             <div class="page_current_info" id="page_current_info">
                 <div id="current_info" class="profile_field">{{status}}</div>
-                <!--<div class="friends_field friends_field_title"><a href="https://vk.com/id{{id}}">{{fullname}}</a>-->
-                <!--</div>-->
-                <!--<div class="profile_field">{{study}}</div>-->
-
-                <a href="https://vk.com/write{{id}}" class="friends_field_act"
-                   onclick="return showWriteMessageBox(event, {{id}})">Написать сообщение</a>
-                <button onclick="get5RandomFriends()" class="flat_button" id="show_friends_button">Показать
+                <button onclick="get5RandomFriends(window.token)" class="flat_button" id="show_friends_button">Показать
                     друзей
                 </button>
             </div>

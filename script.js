@@ -61,7 +61,7 @@ function renderElement(template, args) {
             item = item.replace("}}", "");
             if (args[item] === undefined){
                 console.warn("Переменная "+item+" не найдена");
-                template = template.replace("{{" + item + "}}", "null");
+                template = template.replace("{{" + item + "}}", "");
             } else {
                 template = template.replace("{{" + item + "}}", args[item]);
             }
@@ -77,7 +77,13 @@ function getRandomInt(max) {
     return Math.trunc(Math.random() * max);
 }
 
-function get5RandomFriends() {
+
+/**
+ * Функция выводит 5 случайных друзей пользователя
+ *
+ * @param {string} token
+ */
+function get5RandomFriends(token) {
     var fields = ['uid', 'first_name', 'last_name', 'photo_medium', 'education'];
     friendList = document.getElementById('friends_container');
 
@@ -85,9 +91,11 @@ function get5RandomFriends() {
         friendList.removeChild(friendList.firstChild);
     }
 
-    getJsonpData(vkQueryBuilder('friends.get', {access_token: window.token, fields: fields.join(',')}), function (data) {
+    getJsonpData(vkQueryBuilder('friends.get', {access_token: token, fields: fields.join(',')}), function (data) {
         if(Array.isArray(data.response)) {
-            for(var i = 0; i < 5; i++) {
+            var friendsCounter = data.response.length < 5 ? data.response.length : 5;
+
+            for(var i = 0; i < friendsCounter; i++) {
                 var person = data.response.splice(getRandomInt(data.response.length), 1)[0];
                 var options = {
                     fullname: person.first_name + ' ' + person.last_name,
@@ -125,10 +133,13 @@ function setCookie(cname, cvalue, ctime) {
         document.cookie = cname + "=" + cvalue + ";" + ";path=/";
 }
 
-
+/**
+ * функция достает переменную с соответствующим именем из адресной строки
+ *
+ * @param {string} name имя переменной
+ * @returns {null|string}
+ */
 function getVarFromHash(name) {
-    //inHash
-    //inCookie
     var newVar = window.location.hash.match(new RegExp(name + "=([^&;]*)"));
     return newVar ? newVar [1] : null;
 }
@@ -145,15 +156,13 @@ function getCookie(name) {
 }
 
 
-function getUser(id) {
-    getJsonpData(vkQueryBuilder('users.get', {access_token: window.token, user_ids: '210700286', v: '5.65', fields: 'photo_200_orig,city,status'}), function (data) {
-        console.log(data)
-    });
-}
-
-function showProfile() {
-
-    getJsonpData(vkQueryBuilder('users.get', {access_token: window.token, user_ids: window.userId, v: '5.65', fields: 'photo_200_orig,city,status,universities'}), function (data) {
+/**
+ * Функция рендерит блок с информацией о пользователе
+ * @param {string|int} id идентификатор пользователя, которого нужно отобразить
+ * @param {string} token
+ */
+function showProfile(id, token) {
+    getJsonpData(vkQueryBuilder('users.get', {access_token: token, user_ids: id, v: '5.65', fields: 'photo_200_orig,city,status,universities'}), function (data) {
         if(Array.isArray(data.response)) {
             var wrapper = document.getElementById("profile");
             var person = data.response[0];
