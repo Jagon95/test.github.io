@@ -57,29 +57,36 @@
 
     window.onload = function () {
 
-        var token = window.location.hash.match(/access_token=([0-9a-f]+)/);
+        var token = getVarFromHash('token');
+        var expires = getVarFromHash('expires_in');
+        var userId = getVarFromHash('user_id');
         var auth_button = document.getElementById('auth_button');
         var show_friends_button = document.getElementById('show_friends_button');
 
         if (token) {
             auth_button.style.display = "none";
-            window.token = token[1];
-            var expires = window.location.hash.match(/expires_in=([0-9]+)/);
-            expires = expires ? expires[1] * 1000 : 0;
+            window.token = token;
+            window.userId = userId;
+//            var expires = window.location.hash.match(/expires_in=([0-9]+)/);
+//            expires = expires ? expires[1] * 1000 : 0;
 
-            var userId = window.location.hash.match(/user_id=([0-9]+)/);
-            userId = userId ? userId[1] : null;
+//            var userId = window.location.hash.match(/user_id=([0-9]+)/);
+//            userId = userId ? userId[1] : null;
             setCookie('token', window.token, expires);
             setCookie('user_id', userId, expires);
             window.location.hash = '';
+
+            showProfile();
         }
         else {
             token = getCookie('token');
-            if (!token) {
-                show_friends_button.style.display = "none";
-            } else {
-                window.token = token;
+            userId = getCookie('user_id');
+            if (token) {
                 auth_button.style.display = "none";
+                window.token = token;
+                window.userId = userId;
+//                auth_button.style.display = "none";
+                showProfile();
             }
         }
 
@@ -98,30 +105,6 @@
     <div class="wide_column_wrap">
         <div class="wide_column">
             <div id="profile" class="page_block clear_fix">
-
-                <div id="friends_list" class="friends_list">
-                <div class="friends_user_row clear_fix" id="friends_user_row{{id}}">
-                    <div id="res{{id}}"></div>
-                    <div class="profile_photo_wrap">
-                        <a class="profile_photo" href="https://vk.com/id{{id}}"><img class="profile_photo_img"
-                                                                                             alt="Даша"
-                                                                                             src="https://pp.userapi.com/c604830/v604830785/3f3a1/Nj5NLfy1IVM.jpg"></a>
-                    </div>
-                    <div class="friends_user_info">
-                        <h2 class="page_name">Даша Крюкова</h2>
-                        <div class="page_current_info" id="page_current_info">
-                        <div id="current_info" class="profile_field">Speak not because it is safe, but because it is right. @Snowden</div>
-                        <!--<div class="friends_field friends_field_title"><a href="https://vk.com/id{{id}}">{{fullname}}</a>-->
-                        <!--</div>-->
-                        <div class="profile_field">{{study}}</div>
-
-                        <a href="https://vk.com/write{{id}}" class="friends_field_act"
-                           onclick="return showWriteMessageBox(event, {{id}})">Написать сообщение</a>
-                        <button onclick="get5RandomFriends()" class="flat_button" id="show_friends_button">Показать друзей</button>
-                    </div>
-                </div>
-                </div>
-            </div>
             </div>
 
 
@@ -134,9 +117,33 @@
         </div>
     </div>
 
+<template id="profile_template">
+    <div class="profile_wrapper clear_fix">
+        <div class="profile_photo_wrap">
+            <a class="profile_photo" href="https://vk.com/id{{id}}"><img class="profile_photo_img"
+                                                                         alt="{{fullname}}"
+                                                                         src="{{photo}}"></a>
+        </div>
+        <div class="friends_user_info">
+            <h2 class="page_name">{{fullname}}</h2>
+            <div class="page_current_info" id="page_current_info">
+                <div id="current_info" class="profile_field">{{status}}</div>
+                <!--<div class="friends_field friends_field_title"><a href="https://vk.com/id{{id}}">{{fullname}}</a>-->
+                <!--</div>-->
+                <!--<div class="profile_field">{{study}}</div>-->
+
+                <a href="https://vk.com/write{{id}}" class="friends_field_act"
+                   onclick="return showWriteMessageBox(event, {{id}})">Написать сообщение</a>
+                <button onclick="get5RandomFriends()" class="flat_button" id="show_friends_button">Показать
+                    друзей
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
+
 <template id="friend_template">
     <div class="friends_user_row clear_fix" id="friends_user_row{{id}}">
-        <div id="res{{id}}"></div>
         <div class="friends_photo_wrap">
             <a class="friends_photo _online" href="https://vk.com/id{{id}}"><img class="friends_photo_img"
                                                                                  alt="{{fullname}}"

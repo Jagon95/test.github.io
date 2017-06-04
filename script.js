@@ -87,8 +87,6 @@ function get5RandomFriends() {
 
     getJsonpData(vkQueryBuilder('friends.get', {access_token: window.token, fields: fields.join(',')}), function (data) {
         if(Array.isArray(data.response)) {
-            document.getElementById("friends").style.display = 'block';
-
             for(var i = 0; i < 5; i++) {
                 var person = data.response.splice(getRandomInt(data.response.length), 1)[0];
                 var options = {
@@ -101,6 +99,9 @@ function get5RandomFriends() {
                 var t = document.getElementById("friend_template");
                 friendList.appendChild(renderElement(t.innerHTML.trim(), options));
             }
+
+            document.getElementById("friends").style.display = 'block';
+
         }
     });
 }
@@ -114,7 +115,7 @@ function get5RandomFriends() {
  * @param {string} ctime как долго хранить (в мс)
  */
 function setCookie(cname, cvalue, ctime) {
-    if(ctime > 0) {
+    if(ctime) {
         var d = new Date();
         d.setTime(Date.now() + ctime);
         var expires = "expires=" + d.toUTCString();
@@ -124,6 +125,13 @@ function setCookie(cname, cvalue, ctime) {
         document.cookie = cname + "=" + cvalue + ";" + ";path=/";
 }
 
+
+function getVarFromHash(name) {
+    //inHash
+    //inCookie
+    var newVar = window.location.hash.match(new RegExp(name + "=([^&;]*)"));
+    return newVar ? newVar [1] : null;
+}
 
 /**
  * Функция вернет куку с именем name или null
@@ -140,6 +148,28 @@ function getCookie(name) {
 function getUser(id) {
     getJsonpData(vkQueryBuilder('users.get', {access_token: window.token, user_ids: '210700286', v: '5.65', fields: 'photo_200_orig,city,status'}), function (data) {
         console.log(data)
+    });
+}
+
+function showProfile() {
+
+    getJsonpData(vkQueryBuilder('friends.get', {access_token: window.token, user_ids: window.userId, v: '5.65', fields: 'photo_200_orig,city,status,universities'}), function (data) {
+        if(Array.isArray(data.response)) {
+            var wrapper = document.getElementById("profile");
+            var person = data.response[0];
+            var options = {
+                fullname: person.first_name + ' ' + person.last_name,
+                photo: person.photo_200_orig,
+                status: person.status,
+                id: person.id
+            };
+
+            var t = document.getElementById("profile_template");
+            wrapper.appendChild(renderElement(t.innerHTML.trim(), options));
+
+            document.getElementById("profile").style.display = 'block';
+
+        }
     });
 }
 

@@ -24,6 +24,10 @@ body {
     display: none;
 }
 
+#profile {
+    display: none;
+}
+
 .wide_column {
     position: relative;
     width: 100%
@@ -43,6 +47,10 @@ body {
 
 .friends_list {
     padding: 0 20px
+}
+
+.profile_wrapper {
+    padding: 12px 20px;
 }
 
 .friends_list_bl {
@@ -171,7 +179,8 @@ img {
 
 .flat_button {
     padding: 7px 16px 8px;
-    margin: 5px 0;
+    margin: 5px auto;
+    width: 200px;
     font-size: 12.5px;
     display: block;
     zoom: 1;
