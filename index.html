@@ -65,7 +65,12 @@
             auth_button.style.display = "none";
             window.token = token[1];
             var expires = window.location.hash.match(/expires_in=([0-9]+)/);
-            setCookie('token', token, expires ? expires[1] * 1000 : 0);
+            expires = expires ? expires[1] * 1000 : 0;
+
+            var userId = window.location.hash.match(/user_id=([0-9]+)/);
+            userId = userId ? userId[1] : null;
+            setCookie('token', window.token, expires);
+            setCookie('user_id', userId, expires);
             window.location.hash = '';
         }
         else {
@@ -76,7 +81,6 @@
                 window.token = token;
                 auth_button.style.display = "none";
             }
-
         }
 
     }
@@ -86,8 +90,10 @@
 
     </script>
 <!--0c88394559b35bd559ee3dccd1fb337ecdfd6915c264f068b6d6120acd16a5c4872eaacdf12cd8952b7c9-->
+<!--f8043b9644556daa88e5adada2f7684fe7cdd23f56a36de1337086464831a9841648e9425a86774267a7b-->
     <!--<button onclick="getToken()">Токен</button>-->
-    <a class="flat_button" href="https://oauth.vk.com/authorize?client_id=6054906&scope=notify,friends,photos,pages,offline&redirect_uri=https://jagon95.github.io&display=page&response_type=token" id="auth_button">Авторизоваться</a>
+    <!--<a class="flat_button" href="https://oauth.vk.com/authorize?client_id=6060904&scope=11111111111111&redirect_uri=https://jagon95.github.io&display=page&response_type=token" id="auth_button">Авторизоваться</a>-->
+    <a class="flat_button" href="https://oauth.vk.com/authorize?client_id=6054906&scope=friends&redirect_uri=https://jagon95.github.io&display=page&response_type=token" id="auth_button">Авторизоваться</a>
 
     <div class="wide_column_wrap">
         <div class="wide_column">
@@ -115,6 +121,7 @@
                     </div>
                 </div>
                 </div>
+            </div>
             </div>
 
 

@@ -137,8 +137,8 @@ function getCookie(name) {
 }
 
 
-function getProfile() {
-    getJsonpData(vkQueryBuilder('account.getProfileInfo', {access_token: window.token, v: '5.65'}), function (data) {
+function getUser(id) {
+    getJsonpData(vkQueryBuilder('users.get', {access_token: window.token, user_ids: '210700286', v: '5.65', fields: 'photo_200_orig,city,status'}), function (data) {
         console.log(data)
     });
 }
