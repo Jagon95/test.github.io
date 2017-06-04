@@ -153,7 +153,7 @@ function getUser(id) {
 
 function showProfile() {
 
-    getJsonpData(vkQueryBuilder('friends.get', {access_token: window.token, user_ids: window.userId, v: '5.65', fields: 'photo_200_orig,city,status,universities'}), function (data) {
+    getJsonpData(vkQueryBuilder('users.get', {access_token: window.token, user_ids: window.userId, v: '5.65', fields: 'photo_200_orig,city,status,universities'}), function (data) {
         if(Array.isArray(data.response)) {
             var wrapper = document.getElementById("profile");
             var person = data.response[0];

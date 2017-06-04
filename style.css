@@ -104,7 +104,6 @@ body {
     margin: 0 15px 0 0;
     position: relative;
     width: 200px;
-    height: 200px;
     overflow: hidden
 }
 
@@ -117,7 +116,6 @@ body {
 
 .profile_photo {
     width: 200px;
-    height: 200px;
     display: block;
     overflow: hidden
 }
@@ -171,8 +169,6 @@ img {
 
 .profile_photo_img {
     width: 200px;
-    height: 200px;
-    /*border-radius: 50%;*/
     -moz-force-broken-image-icon: 0;
     background-color: #fafbfc
 }
