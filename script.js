@@ -87,7 +87,7 @@ function get5RandomFriends() {
 
     getJsonpData(vkQueryBuilder('friends.get', {access_token: window.token, fields: fields.join(',')}), function (data) {
         if(Array.isArray(data.response)) {
-            document.getElementById("friend_list_wrapper").style.display = 'block';
+            document.getElementById("friends").style.display = 'block';
 
             for(var i = 0; i < 5; i++) {
                 var person = data.response.splice(getRandomInt(data.response.length), 1)[0];
@@ -136,4 +136,10 @@ function getCookie(name) {
     return matches ? matches[1] : null;
 }
 
+
+function getProfile() {
+    getJsonpData(vkQueryBuilder('account.getProfileInfo', {access_token: window.token, v: '5.65'}), function (data) {
+        console.log(data)
+    });
+}
 

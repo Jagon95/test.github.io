@@ -17,6 +17,10 @@ body {
     width:50%;
     min-width: 720px;
     margin-bottom: 30px;
+    /*display: none;*/
+}
+
+#friends {
     display: none;
 }
 
@@ -87,9 +91,25 @@ body {
     overflow: hidden
 }
 
+.profile_photo_wrap {
+    float: left;
+    margin: 0 15px 0 0;
+    position: relative;
+    width: 200px;
+    height: 200px;
+    overflow: hidden
+}
+
 .friends_photo {
     width: 80px;
     height: 80px;
+    display: block;
+    overflow: hidden
+}
+
+.profile_photo {
+    width: 200px;
+    height: 200px;
     display: block;
     overflow: hidden
 }
@@ -103,6 +123,12 @@ body {
     margin-bottom: 9px;
     color: #656565
 }
+
+.profile_field {
+    margin: 4px auto;
+    color: #333;
+}
+
 
 .friends_field_title {
     font-weight: 700;
@@ -135,11 +161,19 @@ img {
     background-color: #fafbfc
 }
 
+.profile_photo_img {
+    width: 200px;
+    height: 200px;
+    /*border-radius: 50%;*/
+    -moz-force-broken-image-icon: 0;
+    background-color: #fafbfc
+}
+
 .flat_button {
     padding: 7px 16px 8px;
-    margin: 0;
+    margin: 5px 0;
     font-size: 12.5px;
-    display: inline-block;
+    display: block;
     zoom: 1;
     cursor: pointer;
     white-space: nowrap;
@@ -155,4 +189,128 @@ img {
     border: 0;
     border-radius: 2px;
     box-sizing: border-box
+}
+
+
+.wide_column .page_top {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e7e8ec
+}
+
+.wide_column .page_top .page_info_wrap {
+    padding-top: 0
+}
+
+.wide_column .page_top + .page_block_h2 {
+    padding: 0 15px
+}
+
+.wide_column .page_top + .page_block_h2 .ui_tabs.page_info_tabs {
+    padding: 0
+}
+
+.wide_column .page_top + .page_block_h2 .ui_tabs.page_info_tabs li:first-child .ui_tab {
+    margin-left: 0
+}
+
+.wide_column .page_info_wrap .page_top {
+    padding: 0 0 15px
+}
+
+.wide_column .page_info_wrap .page_top:last-child {
+    padding-bottom: 0
+}
+
+.page_info_wrap {
+    padding: 15px 20px
+}
+
+.page_top + .page_info_wrap {
+    padding-top: 0
+}
+
+.page_name, h2.page_name {
+    font-size: 19px;
+    line-height: 25px;
+    font-weight: 400;
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto;
+    margin: -1px 0 -1px -1px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 1px
+}
+
+
+
+.profile_info {
+    line-height: 150%
+}
+
+.profile_info .label {
+    width: 165px;
+    color: #828282
+}
+
+.profile_info .labeled {
+    overflow: hidden
+}
+
+.profile_info .labeled > a {
+    unicode-bidi: embed
+}
+
+.profile_info .relation_request {
+    position: relative
+}
+
+.profile_info .relation_request .progress {
+    position: absolute;
+    left: 0;
+    top: 4px
+}
+
+.profile_info_row {
+    padding-top: 5px
+}
+
+.profile_info_row.block {
+    padding-top: 14px
+}
+
+.profile_info_row.block:first-child {
+    padding-top: 5px
+}
+
+.profile_info_row.no_info .label {
+    width: auto
+}
+
+
+.profile_info_row {
+    padding-top: 5px
+}
+
+.profile_info_row.block {
+    padding-top: 14px
+}
+
+.profile_info_row.block:first-child {
+    padding-top: 5px
+}
+
+.profile_info_row.no_info .label {
+    width: auto
+}
+
+.page_name, h2.page_name {
+    font-size: 19px;
+    line-height: 25px;
+    font-weight: 400;
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto;
+    margin: -1px 0 -1px -1px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 1px
 }

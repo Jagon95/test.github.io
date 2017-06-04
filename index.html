@@ -2,8 +2,6 @@
 <head>
     <title>Test Vk OAuth 2.0</title>
     <script src="script.js"></script>
-    <!--<link type="text/css" rel="stylesheet" href="friends.css">-->
-    <!--<link type="text/css" rel="stylesheet" href="common.css">-->
     <link type="text/css" rel="stylesheet" href="style.css">
     <link type="" rel="stylesheet" href="style.css">
 </head>
@@ -84,19 +82,47 @@
     }
 
 
-    </script>
 
-    <button onclick="get5RandomFriends()" class="flat_button" id="show_friends_button">Показать друзей</button>
+
+    </script>
+<!--0c88394559b35bd559ee3dccd1fb337ecdfd6915c264f068b6d6120acd16a5c4872eaacdf12cd8952b7c9-->
     <!--<button onclick="getToken()">Токен</button>-->
-<a class="flat_button" href="https://oauth.vk.com/authorize?client_id=6054906&scope=friends&redirect_uri=https://jagon95.github.io&display=page&response_type=token" id="auth_button">Авторизоваться</a>
-    <div class="wide_column_wrap" id="friend_list_wrapper">
-        <div class="wide_column" id="wide_column">
+    <a class="flat_button" href="https://oauth.vk.com/authorize?client_id=6054906&scope=notify,friends,photos,pages,offline&redirect_uri=https://jagon95.github.io&display=page&response_type=token" id="auth_button">Авторизоваться</a>
+
+    <div class="wide_column_wrap">
+        <div class="wide_column">
+            <div id="profile" class="page_block clear_fix">
+
+                <div id="friends_list" class="friends_list">
+                <div class="friends_user_row clear_fix" id="friends_user_row{{id}}">
+                    <div id="res{{id}}"></div>
+                    <div class="profile_photo_wrap">
+                        <a class="profile_photo" href="https://vk.com/id{{id}}"><img class="profile_photo_img"
+                                                                                             alt="Даша"
+                                                                                             src="https://pp.userapi.com/c604830/v604830785/3f3a1/Nj5NLfy1IVM.jpg"></a>
+                    </div>
+                    <div class="friends_user_info">
+                        <h2 class="page_name">Даша Крюкова</h2>
+                        <div class="page_current_info" id="page_current_info">
+                        <div id="current_info" class="profile_field">Speak not because it is safe, but because it is right. @Snowden</div>
+                        <!--<div class="friends_field friends_field_title"><a href="https://vk.com/id{{id}}">{{fullname}}</a>-->
+                        <!--</div>-->
+                        <div class="profile_field">{{study}}</div>
+
+                        <a href="https://vk.com/write{{id}}" class="friends_field_act"
+                           onclick="return showWriteMessageBox(event, {{id}})">Написать сообщение</a>
+                        <button onclick="get5RandomFriends()" class="flat_button" id="show_friends_button">Показать друзей</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+
             <div id="friends" class="page_block clear_fix">
                 <div id="friends_list" class="friends_list">
                     <div class="friends_list_bl" id="friends_container">
                     </div>
                 </div>
-                <div id="page_end"></div>
             </div>
         </div>
     </div>
