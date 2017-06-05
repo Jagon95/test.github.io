@@ -4,7 +4,6 @@
     <title>Test Vk OAuth 2.0</title>
     <script src="script.js"></script>
     <link type="text/css" rel="stylesheet" href="style.css">
-    <link type="" rel="stylesheet" href="style.css">
 </head>
 <body>
 <script language="javascript">
@@ -13,6 +12,8 @@
 
         var token = getVarFromHash('token');
         var expires = getVarFromHash('expires_in');
+        if(expires)
+            expires = parseInt(expires) * 1000;
         var userId = getVarFromHash('user_id');
         var auth_button = document.getElementById('auth_button');
         var show_friends_button = document.getElementById('show_friends_button');
