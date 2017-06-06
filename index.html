@@ -26,8 +26,9 @@
             setCookie('user_id', userId, expires);
             window.location.hash = '';
 
-            showProfile(window.userId, window.token);
-            get5RandomFriends(window.token)
+            showProfile(window.userId, window.token, function () {
+                get5RandomFriends(window.token)
+            });
         }
         else {
             token = getCookie('token');
@@ -36,8 +37,9 @@
                 auth_button.style.display = "none";
                 window.token = token;
                 window.userId = userId;
-                showProfile(window.userId, window.token);
-                get5RandomFriends(window.token)
+                showProfile(window.userId, window.token, function () {
+                    get5RandomFriends(window.token)
+                });
             }
         }
     }
@@ -74,9 +76,6 @@
             <h2 class="page_name">{{fullname}}</h2>
             <div class="page_current_info" id="page_current_info">
                 <div id="current_info" class="profile_field">{{status}}</div>
-                <!--<button onclick="get5RandomFriends(window.token)" class="flat_button" id="show_friends_button">Показать-->
-                    <!--друзей-->
-                <!--</button>-->
             </div>
         </div>
     </div>

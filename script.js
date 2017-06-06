@@ -160,8 +160,9 @@ function getCookie(name) {
  * Функция рендерит блок с информацией о пользователе
  * @param {string|int} id идентификатор пользователя, которого нужно отобразить
  * @param {string} token
+ * @param callback
  */
-function showProfile(id, token) {
+function showProfile(id, token, callback) {
     getJsonpData(vkQueryBuilder('users.get', {access_token: token, user_ids: id, v: '5.65', fields: 'photo_200_orig,city,status,universities'}), function (data) {
         if(Array.isArray(data.response)) {
             var wrapper = document.getElementById("profile");
@@ -180,5 +181,7 @@ function showProfile(id, token) {
 
         }
     });
+    if(callback)
+        callback();
 }
 
